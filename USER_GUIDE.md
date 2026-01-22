@@ -1,4 +1,4 @@
-# Logic Pro Articulation Remote - User Guide
+# Cubby Logic Remote - User Guide
 
 This guide explains how to use the Logic Pro Articulation Remote after setup is complete.
 
@@ -6,7 +6,7 @@ This guide explains how to use the Logic Pro Articulation Remote after setup is 
 
 ## Quick Start
 
-1. Start all three services (midi-server, web app, LogicTrackMonitor)
+1. Start all three services (midi-server, web app, CubbyLogicMonitor)
 2. Open Logic Pro with a project
 3. Open the web app at http://localhost:3000
 4. Select a track in Logic Pro
@@ -40,7 +40,7 @@ The main area displays articulation buttons in a responsive grid:
 
 When you select a track in Logic Pro, the system automatically:
 
-1. Detects the track name via LogicTrackMonitor
+1. Detects the track name via CubbyLogicMonitor
 2. Searches your Art Conductor library for a matching articulation set
 3. Loads and displays the articulations
 
@@ -193,7 +193,7 @@ Currently, the web app is designed for touch/mouse interaction. For keyboard con
 ## FAQ
 
 **Q: Why isn't my track being detected?**
-A: Ensure LogicTrackMonitor is running and has Accessibility permission. The track must be selected (clicked) in Logic Pro.
+A: Ensure CubbyLogicMonitor is running and has Accessibility permission. The track must be selected (clicked) in Logic Pro.
 
 **Q: Why are no articulations showing?**
 A: The track name may not match any articulation set. Try loading one manually via Settings.

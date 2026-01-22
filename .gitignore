@@ -10,9 +10,9 @@ dist/
 build/
 
 # Swift build
-LogicTrackMonitor/.build/
-LogicTrackMonitor/.swiftpm/
-LogicTrackMonitor/Package.resolved
+CubbyLogicMonitor/.build/
+CubbyLogicMonitor/.swiftpm/
+CubbyLogicMonitor/Package.resolved
 
 # Debug
 npm-debug.log*

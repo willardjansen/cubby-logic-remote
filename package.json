@@ -1,7 +1,7 @@
 {
   "name": "cubby-logic-remote",
   "version": "1.0.0",
-  "description": "Articulation remote controller for Logic Pro",
+  "description": "Cubby Logic Remote - Articulation controller for Logic Pro",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -1,4 +1,4 @@
-# Logic Pro Articulation Remote - Setup Guide
+# Cubby Logic Remote - Setup Guide
 
 This guide walks you through setting up the Logic Pro Articulation Remote system.
 
@@ -37,14 +37,14 @@ The IAC Driver is a virtual MIDI port built into macOS that allows apps to send 
 
 ## Step 3: Grant Accessibility Permission
 
-LogicTrackMonitor needs Accessibility permission to detect track selection.
+CubbyLogicMonitor needs Accessibility permission to detect track selection.
 
 1. Open **System Settings > Privacy & Security > Accessibility**
 2. Click the **+** button
-3. Navigate to and add: `LogicTrackMonitor/.build/release/LogicTrackMonitor`
+3. Navigate to and add: `CubbyLogicMonitor/.build/release/CubbyLogicMonitor`
 4. Ensure the checkbox is enabled
 
-> **Note:** You may need to rebuild LogicTrackMonitor after granting permission.
+> **Note:** You may need to rebuild CubbyLogicMonitor after granting permission.
 
 ---
 
@@ -56,8 +56,8 @@ cd /path/to/cubby-logic-remote-midi-script
 # Install Node.js dependencies
 npm install
 
-# Build the LogicTrackMonitor Swift app
-cd LogicTrackMonitor
+# Build the CubbyLogicMonitor Swift app
+cd CubbyLogicMonitor
 swift build -c release
 cd ..
 ```
@@ -110,7 +110,7 @@ You should see:
 ### Terminal 3: Track Monitor
 ```bash
 cd /path/to/cubby-logic-remote-midi-script
-./LogicTrackMonitor/.build/release/LogicTrackMonitor
+./CubbyLogicMonitor/.build/release/CubbyLogicMonitor
 ```
 
 You should see:
@@ -138,7 +138,7 @@ Open http://localhost:3000 in your browser
 
 1. **Logic Pro** is running with a project open
 2. **midi-server.js** shows "WebSocket server running"
-3. **LogicTrackMonitor** shows "Found Logic Pro"
+3. **CubbyLogicMonitor** shows "Found Logic Pro"
 4. **Web app** shows green "Connected" indicator
 5. Click a track in Logic → track name appears in blue badge
 6. Articulation buttons appear for that track
@@ -149,8 +149,8 @@ Open http://localhost:3000 in your browser
 
 ### "Accessibility permission not granted"
 - Open System Settings > Privacy & Security > Accessibility
-- Remove and re-add LogicTrackMonitor
-- Restart LogicTrackMonitor
+- Remove and re-add CubbyLogicMonitor
+- Restart CubbyLogicMonitor
 
 ### "WebSocket not connected"
 - Ensure midi-server.js is running
@@ -192,7 +192,7 @@ Add terminal commands to System Settings > General > Login Items
 cd /path/to/cubby-logic-remote-midi-script
 git pull
 npm install
-cd LogicTrackMonitor && swift build -c release && cd ..
+cd CubbyLogicMonitor && swift build -c release && cd ..
 ```
 
 Then restart all three services.

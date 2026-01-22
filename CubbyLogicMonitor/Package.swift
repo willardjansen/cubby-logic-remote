@@ -2,16 +2,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "LogicTrackMonitor",
+    name: "CubbyLogicMonitor",
     platforms: [
         .macOS(.v12)
     ],
     dependencies: [],
     targets: [
         .executableTarget(
-            name: "LogicTrackMonitor",
+            name: "CubbyLogicMonitor",
             dependencies: [],
-            path: "Sources/LogicTrackMonitor"
+            path: "Sources/CubbyLogicMonitor"
         )
     ]
 )

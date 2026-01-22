@@ -1,4 +1,4 @@
-# Logic Pro Articulation Remote - Progress Report
+# Cubby Logic Remote - Progress Report
 
 **Date:** January 22, 2026
 **Status:** ✅ COMPLETE - Full system operational!
@@ -7,13 +7,13 @@
 
 ## What We Built
 
-A system to control Logic Pro articulations from an iPad/browser, similar to Cubby Remote for Cubase:
+A standalone system to control Logic Pro articulations from an iPad/browser:
 
 | Component | Description |
 |-----------|-------------|
 | **Web App** | Next.js app displaying articulation buttons in a responsive grid |
 | **MIDI Bridge** | Node.js WebSocket server bridging browser to Logic via IAC Driver |
-| **LogicTrackMonitor** | Swift menu bar app detecting track selection via Accessibility APIs |
+| **CubbyLogicMonitor** | Swift menu bar app detecting track selection via Accessibility APIs |
 | **Articulations API** | Scans Art Conductor library and serves matching articulation sets |
 | **Articulation Parser** | Parses Logic Pro and Art Conductor .plist formats |
 
@@ -48,7 +48,7 @@ A system to control Logic Pro articulations from an iPad/browser, similar to Cub
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   Logic Pro     │────▶│ LogicTrackMonitor│────▶│  midi-server.js │
+│   Logic Pro     │────▶│ CubbyLogicMonitor│────▶│  midi-server.js │
 │                 │     │   (Swift app)    │     │   (WebSocket)   │
 │  Track headers  │     │                  │     │                 │
 │  expose names   │     │  Reads AXDesc    │     │  Broadcasts     │
@@ -97,8 +97,8 @@ cubby-logic-remote-midi-script/
 │   └── lib/
 │       ├── logicArticulationParser.ts  # .plist parser
 │       └── midiHandler.ts           # MIDI/WebSocket handler
-├── LogicTrackMonitor/
-│   └── Sources/LogicTrackMonitor/
+├── CubbyLogicMonitor/
+│   └── Sources/CubbyLogicMonitor/
 │       └── main.swift               # Track detection app
 ├── midi-server.js                   # MIDI bridge server
 ├── SETUP_GUIDE.md                   # Installation instructions
