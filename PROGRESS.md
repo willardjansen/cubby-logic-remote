@@ -1,7 +1,9 @@
 # Cubby Logic Remote - Progress Report
 
 **Date:** January 22, 2026
-**Status:** ✅ COMPLETE - Full system operational!
+**Status:** ✅ COMPLETE - Signed, notarized, and released!
+
+**Repository:** https://github.com/willardjansen/cubby-logic-remote
 
 ---
 
@@ -13,7 +15,7 @@ A standalone system to control Logic Pro articulations from an iPad/browser:
 |-----------|-------------|
 | **Web App** | Next.js app displaying articulation buttons in a responsive grid |
 | **MIDI Bridge** | Node.js WebSocket server bridging browser to Logic via IAC Driver |
-| **CubbyLogicMonitor** | Swift menu bar app detecting track selection via Accessibility APIs |
+| **CubbyLogicMonitor** | Swift app detecting track selection via Accessibility APIs (signed & notarized) |
 | **Articulations API** | Scans Art Conductor library and serves matching articulation sets |
 | **Articulation Parser** | Parses Logic Pro and Art Conductor .plist formats |
 
@@ -42,6 +44,11 @@ A standalone system to control Logic Pro articulations from an iPad/browser:
 - Connect from any device on local network
 - Touch-friendly button sizes
 
+### macOS Distribution
+- CubbyLogicMonitor.app is code signed with Developer ID
+- Notarized by Apple for Gatekeeper approval
+- Ready for distribution without security warnings
+
 ---
 
 ## Architecture
@@ -54,8 +61,8 @@ A standalone system to control Logic Pro articulations from an iPad/browser:
 │  expose names   │     │  Reads AXDesc    │     │  Broadcasts     │
 │  via AXDesc     │     │  every 0.3s      │     │  track name     │
 └─────────────────┘     └──────────────────┘     └────────┬────────┘
-                                                          │
-                                                          ▼
+                                                         │
+                                                         ▼
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
 │   Logic Pro     │◀────│  midi-server.js  │◀────│   Web App       │
 │                 │     │                  │     │   (Next.js)     │
@@ -87,7 +94,7 @@ Art Conductor .plist files use a different structure than standard Logic articul
 ## File Structure
 
 ```
-cubby-logic-remote-midi-script/
+cubby-logic-remote/
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx                 # Main web app
@@ -98,8 +105,9 @@ cubby-logic-remote-midi-script/
 │       ├── logicArticulationParser.ts  # .plist parser
 │       └── midiHandler.ts           # MIDI/WebSocket handler
 ├── CubbyLogicMonitor/
-│   └── Sources/CubbyLogicMonitor/
-│       └── main.swift               # Track detection app
+│   ├── Sources/CubbyLogicMonitor/
+│   │   └── main.swift               # Track detection app
+│   └── CubbyLogicMonitor.app/       # Signed & notarized app bundle
 ├── midi-server.js                   # MIDI bridge server
 ├── SETUP_GUIDE.md                   # Installation instructions
 └── USER_GUIDE.md                    # Usage instructions
@@ -109,7 +117,7 @@ cubby-logic-remote-midi-script/
 
 ## Tested Configurations
 
-- **macOS:** Sequoia 15.x
+- **macOS:** Sequoia 15.x (Apple Silicon)
 - **Logic Pro:** 11.x
 - **Node.js:** 18+
 - **Art Conductor:** Installed in default location
@@ -119,7 +127,9 @@ cubby-logic-remote-midi-script/
 
 ## Credits
 
-Built with inspiration from:
+Built by Willard Jansen with Claude Code assistance.
+
+Inspired by:
 - Cubby Remote (Cubase articulation controller)
 - Babylonwaves Art Conductor & MetaGrid
 - Apple's Accessibility APIs documentation
