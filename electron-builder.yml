@@ -48,10 +48,9 @@ mac:
   gatekeeperAssess: false
   entitlements: build/entitlements.mac.plist
   entitlementsInherit: build/entitlements.mac.plist
-  notarize:
-    teamId: "9N27LU6UBD"
-    notarizeOptions:
-      keychainProfile: "cubby-logic-remote"
+  notarize: false
+
+afterSign: build/notarize.js
 
 dmg:
   contents:
