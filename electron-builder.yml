@@ -1,0 +1,67 @@
+appId: com.cubby.logic-remote
+productName: Cubby Logic Remote
+copyright: © 2026 Willard Jansen. Cubby Logic Remote.
+
+directories:
+  output: dist
+  buildResources: build
+
+files:
+  - "**/*"
+  - "!**/*.md"
+  - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
+  - "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+  - "!**/node_modules/*.d.ts"
+  - "!**/node_modules/.bin"
+  - "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}"
+  - "!.editorconfig"
+  - "!**/._*"
+  - "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}"
+  - "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}"
+  - "!**/{appveyor.yml,.travis.yml,circle.yml}"
+  - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+
+extraResources:
+  - from: "build/tray-icon.png"
+    to: "tray-icon.png"
+
+asar: true
+asarUnpack:
+  - "out/**/*"
+  - "build/**/*"
+  - "midi-server.js"
+  - "node_modules/midi/**/*"
+  - "node_modules/jzz/**/*"
+  - "node_modules/ws/**/*"
+  - "node_modules/bindings/**/*"
+  - "node_modules/file-uri-to-path/**/*"
+
+mac:
+  category: public.app-category.music
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  icon: build/icon.icns
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  notarize:
+    teamId: "9N27LU6UBD"
+    notarizeOptions:
+      keychainProfile: "cubby-logic-remote"
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+# Rebuild native modules for Electron
+npmRebuild: false
+nodeGypRebuild: false
