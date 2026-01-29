@@ -41,3 +41,6 @@ coverage/
 # Misc
 *.pem
 CLAUDE.md
+*-spec.md
+*-analysis.md
+update docs/
