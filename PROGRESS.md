@@ -1,7 +1,24 @@
 # Cubby Logic Remote - Progress Report
 
-**Date:** January 22, 2026
-**Status:** ✅ COMPLETE - Signed, notarized, and released!
+**Date:** January 29, 2026
+**Status:** ✅ COMPLETE - v1.2.1 Released
+
+---
+
+## 2026-01-29: v1.2.1 - Fixed MIDI Output in Packaged App
+
+### Problem
+MIDI output wasn't working in the packaged Electron app - JZZ library returns empty port lists.
+
+### Solution
+- Switched from `JZZ` to `midi` package for MIDI output (more reliable in Electron)
+- Updated `sendMidi()` to use `midiOut.sendMessage()`
+- Added auto port detection to avoid macOS AirPlay ports (3000, 5000, 7000)
+- Added README with setup and troubleshooting docs
+
+---
+
+## 2026-01-22: v1.2.0 - Initial Release
 
 **Repository:** https://github.com/willardjansen/cubby-logic-remote
 
