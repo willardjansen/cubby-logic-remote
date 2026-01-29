@@ -1,4 +1,5 @@
-const { app, BrowserWindow, dialog, Menu, Tray, shell } = require('electron');
+const { app, BrowserWindow, dialog, Menu, Tray, shell, ipcMain } = require('electron');
+const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const net = require('net');
@@ -7,6 +8,53 @@ const { spawn } = require('child_process');
 let mainWindow;
 let tray;
 let midiServerProcess = null;
+let splashWindow = null;
+
+// Get local IP address
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return 'localhost';
+}
+
+// Create splash screen window
+function createSplashWindow() {
+  splashWindow = new BrowserWindow({
+    width: 400,
+    height: 500,
+    frame: false,
+    resizable: false,
+    center: true,
+    show: false,
+    backgroundColor: '#1a1a2e',
+    webPreferences: {
+      preload: path.join(__dirname, 'splash-preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
+    }
+  });
+  splashWindow.loadFile(path.join(__dirname, 'splash.html'));
+  splashWindow.once('ready-to-show', () => splashWindow.show());
+  return splashWindow;
+}
+
+function updateSplashStatus(status) {
+  if (splashWindow && !splashWindow.isDestroyed()) {
+    splashWindow.webContents.send('status', status);
+  }
+}
+
+function sendConnectionInfo(url) {
+  if (splashWindow && !splashWindow.isDestroyed()) {
+    splashWindow.webContents.send('connection-info', { url });
+  }
+}
 
 // Default ports - will be updated dynamically if busy
 const DEFAULT_WS_PORT = 7101;
@@ -360,7 +408,12 @@ function createTray() {
 
 // App ready
 app.whenReady().then(async () => {
+  // Show splash screen first
+  createSplashWindow();
+  updateSplashStatus('Starting Cubby Logic Remote...');
+
   try {
+    updateSplashStatus('Finding available ports...');
     const ports = await findAvailablePortPair(DEFAULT_NEXT_PORT);
     NEXT_PORT = ports.httpPort;
     WS_PORT = ports.wsPort;
@@ -369,14 +422,35 @@ app.whenReady().then(async () => {
       console.log(`Default ports were busy, using ${NEXT_PORT} (HTTP) and ${WS_PORT} (WebSocket)`);
     }
 
+    updateSplashStatus('Starting MIDI server...');
     startMidiServer();
+
+    updateSplashStatus('Starting web server...');
     await startHttpServer();
-    createWindow();
+
     createTray();
+
+    // Show connection info and wait for user to click continue
+    const localIP = getLocalIP();
+    const connectionUrl = `http://${localIP}:${NEXT_PORT}`;
+    updateSplashStatus('Ready!');
+    sendConnectionInfo(connectionUrl);
+
+    // Wait for user to click "Open in Browser"
+    ipcMain.once('splash-continue', () => {
+      createWindow();
+      setTimeout(() => {
+        if (splashWindow && !splashWindow.isDestroyed()) {
+          splashWindow.close();
+          splashWindow = null;
+        }
+      }, 500);
+    });
 
     console.log(`\nApp running. HTTP: ${NEXT_PORT}, WebSocket: ${WS_PORT}`);
   } catch (err) {
     console.error('Failed to start app:', err);
+    if (splashWindow) splashWindow.close();
     dialog.showErrorBox('Startup Error', `Failed to start: ${err.message}`);
     app.quit();
   }

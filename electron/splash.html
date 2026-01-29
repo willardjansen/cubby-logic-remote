@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Cubby Logic Remote</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      -webkit-app-region: drag;
+      user-select: none;
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 24px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #e94560, #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .status {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 32px;
+    }
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(233, 69, 96, 0.2);
+      border-top-color: #e94560;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .connection-info {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px 32px;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .connection-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .connection-url {
+      font-size: 20px;
+      font-weight: 600;
+      color: #4ade80;
+      font-family: 'SF Mono', Monaco, monospace;
+    }
+    .hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 24px;
+      max-width: 280px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .continue-btn {
+      margin-top: 24px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-app-region: no-drag;
+    }
+    .continue-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.4);
+    }
+    .continue-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <svg class="logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="45" stroke="url(#grad)" stroke-width="4" fill="none"/>
+    <path d="M35 50 L45 60 L65 40" stroke="#e94560" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#e94560"/>
+        <stop offset="100%" style="stop-color:#ff6b6b"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <h1>Cubby Logic Remote</h1>
+  <p class="status" id="status">Starting servers...</p>
+
+  <div class="spinner" id="spinner"></div>
+
+  <div class="connection-info" id="connection-info" style="display: none;">
+    <div class="connection-label">Connect your iPad to</div>
+    <div class="connection-url" id="connection-url">-</div>
+  </div>
+
+  <button class="continue-btn" id="continue-btn" style="display: none;">
+    Open in Browser
+  </button>
+
+  <p class="hint">
+    Make sure your iPad is on the same WiFi network as this computer
+  </p>
+
+  <script>
+    // Listen for connection info from main process
+    window.electronAPI?.onConnectionInfo((info) => {
+      document.getElementById('status').textContent = 'Ready!';
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('connection-info').style.display = 'block';
+      document.getElementById('connection-url').textContent = info.url;
+      document.getElementById('continue-btn').style.display = 'block';
+    });
+
+    window.electronAPI?.onStatus((status) => {
+      document.getElementById('status').textContent = status;
+    });
+
+    // Handle continue button click
+    document.getElementById('continue-btn').addEventListener('click', () => {
+      window.electronAPI?.continue();
+    });
+  </script>
+</body>
+</html>
