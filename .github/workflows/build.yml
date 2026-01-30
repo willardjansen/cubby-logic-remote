@@ -81,16 +81,59 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
+      - name: Get commits since last release
+        id: commits
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s" HEAD~20..HEAD)
+          else
+            COMMITS=$(git log --pretty=format:"- %s" ${PREV_TAG}..HEAD)
+          fi
+          echo "$COMMITS" > commits.txt
+
+      - name: Generate release notes with Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          COMMITS=$(cat commits.txt)
+          VERSION="${{ github.ref_name }}"
+          RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -d @- << EOF
+          {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 1024,
+            "messages": [{
+              "role": "user",
+              "content": "Generate release notes for Cubby Logic Remote version ${VERSION}. This is a Logic Pro articulation controller app for iPad.\n\nCommits since last release:\n${COMMITS}\n\nWrite user-friendly release notes with:\n1. A brief summary (1-2 sentences)\n2. Sections for: New Features, Improvements, Bug Fixes (only include sections that apply)\n3. Use bullet points, no commit hashes\n4. Be concise and focus on user impact\n5. Use markdown formatting\n\nOutput ONLY the release notes, no preamble."
+            }]
+          }
+          EOF
+          )
+          NOTES=$(echo "$RESPONSE" | jq -r '.content[0].text // empty')
+          if [ -z "$NOTES" ]; then
+            NOTES="## Changes\n\n$(cat commits.txt)"
+          fi
+          echo "$NOTES" > release_notes.md
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: artifacts/**/*
           draft: true
-          generate_release_notes: true
+          body_path: release_notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
