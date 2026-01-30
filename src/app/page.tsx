@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ArticulationGrid } from '@/components/ArticulationGrid';
-import About from '@/components/About';
 import { ArticulationSet, createSimpleArticulationSet, parseLogicArticulationSet, autoAssignRemoteTriggers, hasUnassignedRemotes } from '@/lib/logicArticulationParser';
 import { midiHandler, MidiState } from '@/lib/midiHandler';
 
@@ -306,9 +305,6 @@ export default function Home() {
           </p>
         </div>
       )}
-
-      {/* About Button */}
-      <About />
     </main>
   );
 }
