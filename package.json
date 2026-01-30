@@ -7,6 +7,8 @@
     "dev": "next dev --port 7100",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "midi-server": "node midi-server.js",
     "electron:dev": "concurrently -k \"npm run dev\" \"wait-on http://localhost:7100 && electron .\"",
     "electron:build": "next build && npx electron-builder",
@@ -26,13 +28,16 @@
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.45",
     "@types/ws": "^8.5.10",
+    "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.16",
     "concurrently": "^8.2.2",
     "electron": "28.3.3",
     "electron-builder": "^24.9.1",
+    "jsdom": "^27.4.0",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3",
+    "vitest": "^4.0.18",
     "wait-on": "^7.2.0"
   }
 }
